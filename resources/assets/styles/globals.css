@@ -1,8 +1,9 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @import "tw-animate-css";
 
-@tailwind utilities;
 @custom-variant dark (&:is(.dark *));
 
 @layer utilities {
@@ -209,53 +210,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-.spinnerWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--background); /* Fully opaque */
-  z-index: 50;
-}
-.spinner {
-  width: 11.2px;
-  height: 11.2px;
-  animation: spinner-z355kx 1s infinite linear;
-  border-radius: 11.2px;
-  color: hsl(var(--primary)); /* Theme-aware color */
-  box-shadow: 28px 0px 0 0 currentColor, 17.4px 21.8px 0 0 currentColor,
-    -6.2px 27.2px 0 0 currentColor, -25.2px 12px 0 0 currentColor,
-    -25.2px -12px 0 0 currentColor, -6.2px -27.2px 0 0 currentColor,
-    17.4px -21.8px 0 0 currentColor;
-}
-
-@keyframes spinner-z355kx {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spinnerMini {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  /* Use currentColor for theme awareness */
-  background: conic-gradient(#0000 10%, currentColor);
-  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
-  animation: spinner-zp9dbg 1s infinite linear;
-
-  color: hsl(var(--primary)); /* Follows the current theme */
-}
-
-@keyframes spinner-zp9dbg {
-  to {
-    transform: rotate(1turn);
   }
 }
