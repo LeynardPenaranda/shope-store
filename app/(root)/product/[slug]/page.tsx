@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { getProductBySlug } from "@/lib/actions/product.action";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Product",
+};
 
 const ProductDetailPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -14,7 +19,6 @@ const ProductDetailPage = async (props: {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  console.log(product);
   return (
     <>
       <section>

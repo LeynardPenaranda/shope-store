@@ -259,3 +259,19 @@
     transform: rotate(1turn);
   }
 }
+
+.spinner-miniv1 {
+  margin: 0;
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid rgb(27, 24, 24) !important;
+  border-right-color: transparent !important;
+  animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(1turn);
+  }
+}
