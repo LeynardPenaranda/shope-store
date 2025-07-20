@@ -8,7 +8,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 //Sign In with Google
 
 export async function signInWithGoogle() {
-  await signIn("google", { redirectTo: "/" });
+  await signIn("google", { callbackUrl: "/" });
 }
 
 //Sign in the user with credentials
