@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 import Header from "@/components/shared/header/page";
 import Footer from "@/components/Footer";
 const inter = Inter({
@@ -32,6 +33,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster />
           <Header />
           <main className="mx-auto max-w-7xl  min-h-[80vh]">{children}</main>
           <Footer />

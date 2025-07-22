@@ -6,6 +6,8 @@ import { adapter } from "next/dist/server/web/adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export const config = {
   pages: {
@@ -67,9 +69,12 @@ export const config = {
   ],
 
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, user, trigger, token }: any) {
       //set user id from the token
       session.user.id = token.sub;
+      session.user.role = token.role;
+      session.user.name = token.name;
 
       //if there's an update, set the user name
       if (trigger === "update") {
@@ -77,16 +82,85 @@ export const config = {
       }
       return session;
     },
-    authorized({ auth, request }) {
-      return !!auth?.user;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    authorized({ auth, request }: any) {
+      //Array of regex patterns of path we want to protect
+
+      const protectedPath = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/profile/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ];
+
+      //get the pathname from the request url object
+      const { pathname } = request.nextUrl;
+
+      //Check if user not authenticated
+      if (!auth && protectedPath.some((p) => p.test(pathname))) return false;
+
+      if (!request.cookies.get("sessionCartId")) {
+        //Check for session cart cookie
+
+        // Generate new session cart id cookie
+        const sessionCartId = crypto.randomUUID();
+        // Clone the req headers
+
+        const newRequestHeaders = new Headers(request.headers);
+
+        //Create new response
+
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        });
+
+        //Set newly generated sessionCartId in the response cookies
+
+        response.cookies.set("sessionCartId", sessionCartId);
+        return response;
+      } else {
+        return true;
+      }
     },
-    async jwt({ token, user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user, trigger }: any) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        // token.role = user.role ?? "user"; // default role if none
+        token.role = user.role ?? "user"; // default role if none
+
+        if (trigger === "signIn" || trigger === "signUp") {
+          const cookiesObject = await cookies();
+          const sessionCartId = cookiesObject.get("sessionCartId")?.value;
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId },
+            });
+
+            if (sessionCart) {
+              //Delete Current User Cart
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              });
+
+              //Assigned New Cart
+
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              });
+            }
+          }
+        }
       }
+
       return token;
     },
   },

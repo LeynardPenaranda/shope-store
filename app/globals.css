@@ -260,18 +260,20 @@
   }
 }
 
-.spinner-miniv1 {
-  margin: 0;
-  width: 20px;
+.spinner-mini {
+  width: 25px;
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 2px solid rgb(27, 24, 24) !important;
-  border-right-color: transparent !important;
-  animation: rotate 1s infinite linear;
+  color: hsl(var(--foreground)); /* Light in dark mode, dark in light mode */
+  background: radial-gradient(farthest-side, currentColor 94%, #0000) top/4px
+      4px no-repeat,
+    conic-gradient(#0000 30%, currentColor);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 0);
+  animation: l13 1s infinite linear;
 }
 
-@keyframes rotate {
-  to {
+@keyframes l13 {
+  100% {
     transform: rotate(1turn);
   }
 }

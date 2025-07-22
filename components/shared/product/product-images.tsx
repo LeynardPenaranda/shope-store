@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 
 const ProductImages = ({ images }: { images: string[] }) => {
-  console.log(images);
   const [current, setCurrent] = useState(0);
 
   return (

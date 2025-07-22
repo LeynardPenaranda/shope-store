@@ -6,35 +6,38 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { signInWithCredentials } from "@/lib/actions/user.action";
+import { signInWithCredentials, signUpUser } from "@/lib/actions/user.action";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import SpinnerMiniv1 from "@/components/shared/SpinnerMiniv1";
-import GoogleSignIn from "./SignInGoogle";
+
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
+import GoogleSignIn from "../signIn/SignInGoogle";
 
-const SignInForm = () => {
+const SignUpForm = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const [isEyeOpen, setIsEyeOpen] = useState(false);
-  const [data, action] = useActionState(signInWithCredentials, {
+  const [isEyeOpenConfirmPassword, setIsEyeOpenConfirmPassword] =
+    useState(false);
+  const [data, action] = useActionState(signUpUser, {
     success: false,
     message: "",
   });
 
-  const SignInButton = () => {
+  const SignUpButton = () => {
     const { pending } = useFormStatus();
     return (
       <Button disabled={pending} className="w-full">
         {pending ? (
           <div className="flex items-center justify-center gap-2">
-            <span>Signing In...</span> <SpinnerMiniv1 />
+            <span>Submitting...</span> <SpinnerMiniv1 />
           </div>
         ) : (
-          <span>Sign In</span>
+          <span>Sign Up</span>
         )}
       </Button>
     );
@@ -51,6 +54,17 @@ const SignInForm = () => {
       <form action={action}>
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <div className="space-y-6">
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autoComplete="name"
+              className="ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+            />
+          </div>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -83,16 +97,38 @@ const SignInForm = () => {
               )}
             </span>
           </div>
-          <SignInButton />
+
+          <div className="relative">
+            <Label htmlFor="email">Confirm Password</Label>
+            <Input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={isEyeOpenConfirmPassword ? "text" : "password"}
+              required
+              autoComplete="confirmPassword"
+              className="pr-8  ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+            />
+            <span
+              className="absolute top-5 right-2 cursor-pointer"
+              onClick={() => setIsEyeOpenConfirmPassword((c) => !c)}
+            >
+              {isEyeOpenConfirmPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </span>
+          </div>
+          <SignUpButton />
           {data && !data.success && (
-            <div className="text-center text-destructive bg-red-200 rounded-2xl px-4 sm:px-0">
+            <div className="text-center text-destructive bg-red-200 rounded-2xl px-5 sm:px-0">
               {data.message}
             </div>
           )}
           <div className="text-sm text-center text-muted-foreground">
-            Don&apos;t have an account?
-            <Link href="/signUp" target="_self" className="link">
-              <span className="underline"> Sign Up</span>
+            Already have an account?
+            <Link href="/signIn" target="_self" className="link">
+              <span className="underline"> Sign In</span>
             </Link>
           </div>
         </div>
@@ -112,4 +148,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;
