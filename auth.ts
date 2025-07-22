@@ -1,8 +1,7 @@
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+// import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/db/prisma";
-import { adapter } from "next/dist/server/web/adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
@@ -62,10 +61,10 @@ export const config = {
         return null;
       },
     }),
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    }),
+    // Google({
+    //   clientId: process.env.AUTH_GOOGLE_ID,
+    //   clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    // }),
   ],
 
   callbacks: {
