@@ -13,6 +13,7 @@ import { prisma } from "@/db/prisma";
 import { ZodError, z } from "zod";
 import { ShippingAddress } from "@/types";
 import { formatError } from "../utils";
+import { getMyCart } from "./cart.action";
 
 //Sign In with Google
 
@@ -57,6 +58,10 @@ export async function signInWithCredentials(
 
 //Sign user out
 export async function signOutUser() {
+  const currentCart = await getMyCart();
+  if (currentCart) {
+    await prisma.cart.delete({ where: { id: currentCart?.id } });
+  }
   await signOut();
 }
 

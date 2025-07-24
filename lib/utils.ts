@@ -65,3 +65,50 @@ export function round2(value: number | string) {
     throw new Error("Value is not a number or string");
   }
 }
+
+//Shorten the Uuid
+
+export function formatId(id: string) {
+  return `..${id.substring(id.length - 6)}`;
+}
+
+//Format the date and time
+
+export function formatDateandTime(dateString: Date) {
+  const dateTimeOptions: Intl.DateTimeFormatOptions = {
+    month: "short", //Abbreviated month name (e.g., "Oct" for October)
+    year: "numeric", //Abbreviated year (e.g., 2025)
+    day: "numeric", //Abbreviated day (e.g., 25)
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true, // use the 12-hour clock structure (true) or 24 hours just turn it to (false)
+  };
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "short", // abbreviated weekday (e.g., "Mon" for Monday)
+    month: "short", // abbreviated month (e.g., "oct")
+    year: "numeric", //Abbreviated year (e.g., 2025)
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric", // numeric hour (e.g., '6')
+    minute: "numeric", // numeric minute month (e.g., '30')
+    hour12: true, // use the 12-hour clock structure (true) or 24 hours just turn it to (false)
+  };
+
+  const formattedDateTime: string = new Date(dateString).toLocaleString(
+    "en-PH",
+    dateTimeOptions
+  );
+  const formattedDate: string = new Date(dateString).toLocaleString(
+    "en-PH",
+    dateOptions
+  );
+  const formattedTime: string = new Date(dateString).toLocaleString(
+    "en-PH",
+    timeOptions
+  );
+  return {
+    dateTime: formattedDateTime,
+    dateOnly: formattedDate,
+    timeOnly: formattedTime,
+  };
+}

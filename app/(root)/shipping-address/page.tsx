@@ -37,7 +37,9 @@ const ShippingAddressPage = async () => {
 
   return (
     <>
-      <CheckOutSteps current={1} />
+      <span className="hidden md:block">
+        <CheckOutSteps current={1} />
+      </span>
       <ShippingAddressForm address={user.address as ShippingAddress} />
     </>
   );

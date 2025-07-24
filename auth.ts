@@ -1,12 +1,13 @@
 import NextAuth from "next-auth";
-// import Google from "next-auth/providers/google";
+import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/db/prisma";
+import { adapter } from "next/dist/server/web/adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
-import type { NextAuthConfig } from "next-auth";
+
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { authConfig } from "./auth.config";
 
 export const config = {
   pages: {
@@ -14,7 +15,7 @@ export const config = {
     error: "/signIn",
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
@@ -61,13 +62,15 @@ export const config = {
         return null;
       },
     }),
-    // Google({
-    //   clientId: process.env.AUTH_GOOGLE_ID,
-    //   clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    // }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
   ],
 
   callbacks: {
+    ...authConfig.callbacks,
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, user, trigger, token }: any) {
       //set user id from the token
@@ -81,51 +84,7 @@ export const config = {
       }
       return session;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    authorized({ auth, request }: any) {
-      //Array of regex patterns of path we want to protect
 
-      const protectedPath = [
-        /\/shipping-address/,
-        /\/payment-method/,
-        /\/place-order/,
-        /\/profile/,
-        /\/user\/(.*)/,
-        /\/order\/(.*)/,
-        /\/admin/,
-      ];
-
-      //get the pathname from the request url object
-      const { pathname } = request.nextUrl;
-
-      //Check if user not authenticated
-      if (!auth && protectedPath.some((p) => p.test(pathname))) return false;
-
-      if (!request.cookies.get("sessionCartId")) {
-        //Check for session cart cookie
-
-        // Generate new session cart id cookie
-        const sessionCartId = crypto.randomUUID();
-        // Clone the req headers
-
-        const newRequestHeaders = new Headers(request.headers);
-
-        //Create new response
-
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        });
-
-        //Set newly generated sessionCartId in the response cookies
-
-        response.cookies.set("sessionCartId", sessionCartId);
-        return response;
-      } else {
-        return true;
-      }
-    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user, trigger }: any) {
       if (user) {
@@ -163,6 +122,6 @@ export const config = {
       return token;
     },
   },
-} satisfies NextAuthConfig;
+};
 
 export const { handlers, signIn, signOut, auth } = NextAuth(config);

@@ -15,7 +15,9 @@ const PaymentMethodPage = async () => {
 
   return (
     <>
-      <CheckOutSteps current={2} />
+      <span className="hidden md:block">
+        <CheckOutSteps current={2} />
+      </span>
       <PaymentMethodForm preferredPaymentMethod={user.paymentMethod} />
     </>
   );
