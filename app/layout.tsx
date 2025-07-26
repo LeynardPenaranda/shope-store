@@ -34,9 +34,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
-          <div className="grid grid-cols-1 grid-rows-[5rem_1fr_10rem]">
+          <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="mx-auto max-w-7xl  min-h-[80vh]">{children}</main>
+            <main className="flex-1 mx-auto max-w-7xl ">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>
