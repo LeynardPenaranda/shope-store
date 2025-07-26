@@ -43,7 +43,7 @@ const CardList = ({
           <h2 className="text-xl pb-4 font-bold">Shipping Address</h2>
           <p className="text-gray-500">{userAddress.fullName}</p>
           <p className="text-gray-500">
-            {userAddress.streetAddress}, {userAddress.City}{" "}
+            {userAddress.streetAddress}, {userAddress.city}{" "}
             {userAddress.postalCode}, {userAddress.country}{" "}
           </p>
           <div className="mt-3">
