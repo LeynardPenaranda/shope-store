@@ -23,15 +23,22 @@ import {
 import {
   approvePayPalOrder,
   createPayPalOrder,
+  deliverOrder,
+  updateOrderToPaidCOD,
 } from "@/lib/actions/order.actions";
 import { useToast } from "@/lib/hooks/useToast";
+import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const OrderDetailsTable = ({
   order,
   paypalClientId,
+  isAdmin,
 }: {
   order: Order;
   paypalClientId: string;
+  isAdmin: boolean;
 }) => {
   const {
     shippingAddress,
@@ -48,6 +55,7 @@ const OrderDetailsTable = ({
     id,
   } = order;
   const { success, warning } = useToast();
+  const [isPending, startTransition] = useTransition();
 
   const PrintLoadingState = () => {
     const [{ isPending, isRejected }] = usePayPalScriptReducer();
@@ -80,6 +88,64 @@ const OrderDetailsTable = ({
       success(res.message);
     }
   };
+
+  const MarkAsPaidButton = () => {
+    return (
+      <Button
+        type="button"
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await updateOrderToPaidCOD(order.id);
+
+            if (!res.success) {
+              warning(res.message);
+            } else {
+              success(res.message);
+            }
+          })
+        }
+      >
+        {isPending ? (
+          <div className="flex gap-2 items-center justify-center ">
+            <Loader2 className="animate-spin" />
+            <span>Processing...</span>
+          </div>
+        ) : (
+          `Mark us paid`
+        )}
+      </Button>
+    );
+  };
+
+  const MarkAsDeliveredButton = () => {
+    return (
+      <Button
+        type="button"
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await deliverOrder(order.id);
+
+            if (!res.success) {
+              warning(res.message);
+            } else {
+              success(res.message);
+            }
+          })
+        }
+      >
+        {isPending ? (
+          <div className="flex gap-2 items-center justify-center ">
+            <Loader2 className="animate-spin" />
+            <span>Processing...</span>
+          </div>
+        ) : (
+          `Mark us Delivered`
+        )}
+      </Button>
+    );
+  };
   return (
     <>
       <h1 className="py-4 text-2xl text-center sm:text-start">
@@ -105,7 +171,7 @@ const OrderDetailsTable = ({
               <h2 className="text-xl pb-4">Shippin Address</h2>
               <p>{shippingAddress.fullName}</p>
               <p className="mb-2">
-                {shippingAddress.streetAddress}, {shippingAddress.City}{" "}
+                {shippingAddress.streetAddress}, {shippingAddress.city}{" "}
                 {shippingAddress.postalCode} , {shippingAddress.country}
               </p>
               {isDelivered ? (
@@ -193,6 +259,12 @@ const OrderDetailsTable = ({
                   </PayPalScriptProvider>
                 </div>
               )}
+
+              {/* Cash on Delivery */}
+              {isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (
+                <MarkAsPaidButton />
+              )}
+              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
             </CardContent>
           </Card>
         </div>

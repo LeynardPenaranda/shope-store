@@ -30,7 +30,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
     defaultValues: address || {
       fullName: "",
       streetAddress: "",
-      City: "",
+      city: "",
       postalCode: "",
       country: "",
     },
@@ -112,13 +112,13 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
             <div className="flex flex-col md:flex-row gap-5">
               <FormField
                 control={form.control}
-                name="City"
+                name="city"
                 render={({
                   field,
                 }: {
                   field: ControllerRenderProps<
                     z.infer<typeof shippingAddressSchema>,
-                    "City"
+                    "city"
                   >;
                 }) => (
                   <FormItem className="w-full">

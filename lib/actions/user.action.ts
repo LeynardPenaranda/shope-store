@@ -12,7 +12,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { prisma } from "@/db/prisma";
 import { ZodError, z } from "zod";
 import { Address, ShippingAddress } from "@/types";
-import { formatError } from "../utils";
+import { convertToPlainObject, formatError } from "../utils";
 import { getMyCart } from "./cart.action";
 import { revalidatePath } from "next/cache";
 
@@ -136,7 +136,7 @@ export async function getUserById(userId: string) {
 
   if (!user) throw new Error("User not found");
 
-  return user;
+  return convertToPlainObject(user);
 }
 
 // Update users address
