@@ -6,14 +6,16 @@ import { Plus, Minus, LoaderCircle } from "lucide-react";
 import { Cart, CartItem } from "@/types";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.action";
 import { useToast } from "@/lib/hooks/useToast";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 
 const AddtoCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
   const router = useRouter();
   const { success, error } = useToast();
   const [isPending, startTransition] = useTransition();
+  const [buttonClicked, setButtonClicked] = useState("");
 
   const handleAddtoCart = async () => {
+    setButtonClicked("Add");
     startTransition(async () => {
       const res = await addItemToCart(item);
 
@@ -38,6 +40,7 @@ const AddtoCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
     cart && cart.items.find((x) => x.productId === item.productId);
 
   const handlerRemoveFromCart = async () => {
+    setButtonClicked("Minus");
     startTransition(async () => {
       const res = await removeItemFromCart(item.productId);
       if (res.success) {
@@ -57,7 +60,7 @@ const AddtoCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
         onClick={handlerRemoveFromCart}
         disabled={isPending}
       >
-        {isPending ? (
+        {isPending && buttonClicked === "Minus" ? (
           <LoaderCircle className="w-4 h-4 animate-spin" />
         ) : (
           <Minus className="h-4 w-4" />
@@ -71,7 +74,7 @@ const AddtoCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
         onClick={handleAddtoCart}
         disabled={isPending}
       >
-        {isPending ? (
+        {isPending && buttonClicked === "Add" ? (
           <LoaderCircle className="w-4 h-4 animate-spin" />
         ) : (
           <Plus className="h-4 w-4" />

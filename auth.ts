@@ -86,7 +86,7 @@ export const config = {
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user, trigger }: any) {
+    async jwt({ token, user, trigger, session }: any) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
@@ -117,6 +117,12 @@ export const config = {
             }
           }
         }
+      }
+
+      //Handle session updates
+
+      if (trigger === "update" && session?.user) {
+        token.name = session.user.name;
       }
 
       return token;

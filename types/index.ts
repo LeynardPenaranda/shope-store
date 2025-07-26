@@ -18,6 +18,13 @@ export type Product = z.infer<typeof insertProductSchema> & {
 export type Cart = z.infer<typeof insertcartSchema>;
 export type CartItem = z.infer<typeof cartItemSchema>;
 export type ShippingAddress = z.infer<typeof shippingAddressSchema>;
+
+export type Address = {
+  streetAddress: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
 export type OrderItem = z.infer<typeof insertOrderItemSchema>;
 export type Order = z.infer<typeof insertOrderSchema> & {
   id: string;

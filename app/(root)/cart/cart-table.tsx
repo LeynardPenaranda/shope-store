@@ -5,7 +5,7 @@ import { useToast } from "@/lib/hooks/useToast";
 import { Cart } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import {
   Table,
   TableBody,
@@ -24,6 +24,7 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
   const router = useRouter();
   const { success, warning } = useToast();
   const [isPending, startTransition] = useTransition();
+  const [buttonClick, setButtonClick] = useState("");
 
   return (
     <>
@@ -71,7 +72,8 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
                         disabled={isPending}
                         variant="outline"
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
+                          setButtonClick("Minus");
                           startTransition(async () => {
                             const res = await removeItemFromCart(
                               item.productId
@@ -80,10 +82,10 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
                             if (!res.success) {
                               warning(res.message);
                             }
-                          })
-                        }
+                          });
+                        }}
                       >
-                        {isPending ? (
+                        {isPending && buttonClick === "Minus" ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
                           <Minus className="h-4 w-4" />
@@ -95,17 +97,18 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
                         disabled={isPending}
                         variant="outline"
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
+                          setButtonClick("Add");
                           startTransition(async () => {
                             const res = await addItemToCart(item);
 
                             if (!res.success) {
                               warning(res.message);
                             }
-                          })
-                        }
+                          });
+                        }}
                       >
-                        {isPending ? (
+                        {isPending && buttonClick === "Add" ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
                           <Plus className="h-4 w-4" />
@@ -136,11 +139,12 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
                 <Button
                   className="w-full cursor-pointer"
                   disabled={isPending}
-                  onClick={() =>
-                    startTransition(() => router.push("/shipping-address"))
-                  }
+                  onClick={() => {
+                    setButtonClick("shipping");
+                    startTransition(() => router.push("/shipping-address"));
+                  }}
                 >
-                  {isPending ? (
+                  {isPending && buttonClick === "shipping" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <>

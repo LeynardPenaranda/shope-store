@@ -6,24 +6,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getMyOrder } from "@/lib/actions/order.actions";
+import { deleteOrder, getAllOrders } from "@/lib/actions/order.actions";
+import { requireAdmin } from "@/lib/auth-guard";
 import { formatDateandTime, formatId } from "@/lib/utils";
 import { formatToPHP } from "@/utils/helper";
 import Image from "next/image";
-
-import ButtonLink from "./ButtonLink";
 import Pagination from "@/components/shared/pagination";
+import { Button } from "@/components/ui/button";
+import DeleteDialog from "@/components/shared/delete-dialog";
 
 export const metadata = {
-  title: "Orders History",
+  title: "Admin Orders",
 };
-
-const OrdersPage = async (props: {
+const OrderPage = async (props: {
   searchParams: Promise<{ page: string }>;
 }) => {
-  const { page } = await props.searchParams;
+  await requireAdmin();
 
-  const orders = await getMyOrder({ page: Number(page) || 1 });
+  const { page = "1" } = await props.searchParams;
+  const orders = await getAllOrders({ page: Number(page) });
 
   return (
     <div className="space-y-2">
@@ -42,7 +43,7 @@ const OrdersPage = async (props: {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.order.map((eachOrder) => (
+            {orders.data.map((eachOrder) => (
               <TableRow key={eachOrder.id}>
                 <TableCell>
                   <Image
@@ -74,21 +75,19 @@ const OrdersPage = async (props: {
                   )}
                 </TableCell>
                 <TableCell>
-                  <ButtonLink href={`/order/${eachOrder.id}`} />
+                  <Button variant="outline">Details</Button>
+                  <DeleteDialog id={eachOrder.id} action={deleteOrder} />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        {orders.totalPages > 1 && (
-          <Pagination
-            page={Number(page) || 1}
-            totalPages={orders?.totalPages}
-          />
+        {orders.totalPage > 1 && (
+          <Pagination page={Number(page) || 1} totalPages={orders?.totalPage} />
         )}
       </div>
     </div>
   );
 };
 
-export default OrdersPage;
+export default OrderPage;

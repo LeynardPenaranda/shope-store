@@ -11,15 +11,16 @@ import { hashSync } from "bcrypt-ts-edge";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { prisma } from "@/db/prisma";
 import { ZodError, z } from "zod";
-import { ShippingAddress } from "@/types";
+import { Address, ShippingAddress } from "@/types";
 import { formatError } from "../utils";
 import { getMyCart } from "./cart.action";
+import { revalidatePath } from "next/cache";
 
 //Sign In with Google
 
-export async function signInWithGoogle() {
-  await signIn("google", { callbackUrl: "/" });
-}
+// export async function signInWithGoogle() {
+//   await signIn("google", { callbackUrl: "/" });
+// }
 
 //Sign in the user with credentials
 
@@ -199,4 +200,49 @@ export async function updateUserPaymentMethod(
       message: formatError(error),
     };
   }
+}
+
+//Update the user profile
+
+export async function updateProfile(user: {
+  name: string;
+  email: string;
+  address: Record<string, string>;
+}) {
+  try {
+    const session = await auth();
+    const currentUser = await prisma.user.findFirst({
+      where: { id: session?.user?.id },
+    });
+
+    if (!currentUser) throw new Error("User not authenticated");
+    await prisma.user.update({
+      where: { id: currentUser.id },
+      data: {
+        name: user.name,
+        address: user.address,
+        email: user.email,
+      },
+    });
+
+    return {
+      success: true,
+      message: "User profile updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
+
+export async function getUserAddress(userId: string): Promise<Address | null> {
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!user || !user.address) return null;
+
+  return user.address as Address;
 }

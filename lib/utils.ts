@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { ZodError } from "zod";
+import qs from "query-string";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -111,4 +112,33 @@ export function formatDateandTime(dateString: Date) {
     dateOnly: formattedDate,
     timeOnly: formattedTime,
   };
+}
+
+// Form the Pagination Links
+
+export function formUrlQuery({
+  params,
+  key,
+  value,
+}: {
+  params: string;
+  key: string;
+  value: string | null;
+}) {
+  const query = qs.parse(params);
+  query[key] = value;
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query,
+    },
+    {
+      skipNull: true,
+    }
+  );
+}
+
+export function formatNumber(number: number): string {
+  return number.toLocaleString("en-US");
 }

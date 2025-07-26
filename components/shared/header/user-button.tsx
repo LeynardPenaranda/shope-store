@@ -7,6 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { signOutUser } from "@/lib/actions/user.action";
 import { User } from "lucide-react";
 import Image from "next/image";
@@ -77,6 +78,13 @@ const UserButtonProfile = async () => {
               Order History
             </Link>
           </DropdownMenuItem>
+          {session?.user?.role === "admin" && (
+            <DropdownMenuItem>
+              <Link href="/admin/overview" className="w-full">
+                Admin
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem className="p-0 mb-1">
             <form action={signOutUser} className="w-full">
               <Button
