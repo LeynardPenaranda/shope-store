@@ -1,3 +1,4 @@
+import DeleteDialog from "@/components/shared/delete-dialog";
 import Pagination from "@/components/shared/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,13 +9,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getAllProducts } from "@/lib/actions/product.action";
+import { deleteProduct, getAllProducts } from "@/lib/actions/product.action";
 import { requireAdmin } from "@/lib/auth-guard";
 import { formatId, formatNumber } from "@/lib/utils";
 import { formatToPHP } from "@/utils/helper";
 import Image from "next/image";
 import Link from "next/link";
+import CreateModal from "./create/create-modal";
+import UpdateButton from "./create/UpdateButton";
 
+export const metadata = {
+  title: "Admin Products",
+};
 const AdminProduct = async (props: {
   searchParams: Promise<{ page: string; query: string; category: string }>;
 }) => {
@@ -31,10 +37,24 @@ const AdminProduct = async (props: {
   return (
     <div className="space-y-2 mt-10">
       <div className="flex-between">
-        <h1 className="h2-bold">Product</h1>
-        <Button asChild>
+        <div className="flex items-center gap-4">
+          <h1 className="h2-bold">Products</h1>
+          {searchText && (
+            <div>
+              Filtered By <i>&quot;{searchText}&quot;</i>{" "}
+              <Link href="/admin/products">
+                <Button variant="outline" size="sm">
+                  Remove Filter
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* <Button asChild>
           <Link href="/admin/products/create">Create Product</Link>
-        </Button>
+        </Button> */}
+        <CreateModal type="Create" />
       </div>
 
       <Table>
@@ -68,17 +88,19 @@ const AdminProduct = async (props: {
               <TableCell>{formatNumber(product.stock)}</TableCell>
               <TableCell>{product.rating}</TableCell>
               <TableCell className="flex gap-2">
-                <Button variant="outline" size="sm" asChild>
-                  <Link href={`/admin/products/${product.id}`}>Edit</Link>
-                </Button>
-                {/* Delete */}
+                {/* Update button */}
+                <UpdateButton id={product.id} />
+                <DeleteDialog
+                  id={product.id}
+                  action={deleteProduct}
+                ></DeleteDialog>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {products?.totalPages && products.totalPages > 1 && (
+      {products.totalPages > 1 && (
         <Pagination page={page} totalPages={products.totalPages} />
       )}
     </div>

@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AdminSearch from "./admin-search";
 
 const links = [
   {
@@ -19,7 +20,7 @@ const links = [
   },
   {
     title: "Users",
-    href: "/admin/user",
+    href: "/admin/users",
   },
 ];
 
@@ -28,12 +29,12 @@ const AdminNavbar = () => {
 
   return (
     <>
-      <div className="flex items-center  justify-center gap-4">
+      <div className="flex items-center justify-center gap-4">
         {links.map((link) => (
           <div key={link.title}>
             <Link
               href={link.href}
-              className={`text-[.8rem] md:text-xl relative pb-2 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-primary after:transition-transform after:duration-300 after:origin-left ${
+              className={`text-[.8rem] md:text-[1.1rem] relative pb-2 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-primary after:transition-transform after:duration-300 after:origin-left ${
                 pathname === link.href ? "after:scale-x-100" : "after:scale-x-0"
               }`}
             >
@@ -43,11 +44,7 @@ const AdminNavbar = () => {
         ))}
       </div>
 
-      <Input
-        type="search"
-        placeholder="Search.."
-        className="md:w-[250px] lg:w-[300px]"
-      />
+      <AdminSearch />
     </>
   );
 };

@@ -277,3 +277,42 @@
     transform: rotate(1turn);
   }
 }
+
+.custom-dialog-content {
+  width: 50% !important;
+  max-width: 90% !important;
+}
+
+@media (min-width: 30px) {
+  .custom-dialog-content {
+    width: 90% !important;
+    max-width: 90% !important;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .custom-dialog-content {
+    width: 60% !important;
+    max-width: 90% !important;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .custom-dialog-content {
+    width: 50% !important;
+    max-width: 90% !important;
+    padding: 10px;
+  }
+}
+
+/* Upload button text override */
+
+html.dark .upload-field .text-white {
+  color: #fff !important;
+}
+
+.upload-field .text-white {
+  color: #000 !important;
+}

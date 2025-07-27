@@ -10,7 +10,7 @@ export default function AdminLayout({
       <div className="border border-gray-200 flex flex-col md:flex-row items-center justify-around">
         <AdminNavbar />
       </div>
-      <main className="">{children}</main>
+      <main>{children}</main>
     </div>
   );
 }

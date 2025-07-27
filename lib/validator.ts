@@ -24,6 +24,12 @@ export const insertProductSchema = z.object({
   price: currency,
 });
 
+//Scehma for updating products
+
+export const updateProductsSchema = insertProductSchema.extend({
+  id: z.string().min(1, "Id is required"),
+});
+
 //Schema for signing user in
 
 export const signInFormSchema = z.object({
@@ -130,4 +136,13 @@ export const updateProfileSchema = z.object({
     country: z.string().optional(),
     postalCode: z.string().optional(),
   }),
+});
+
+//Scehma to update users
+
+export const updateUserSchema = z.object({
+  name: z.string().min(3, "The name must be at least three characters"),
+  email: z.string().email("Invalid email address"),
+  id: z.string().min(1, "ID is required"),
+  role: z.string().min(1, "Role is required"),
 });

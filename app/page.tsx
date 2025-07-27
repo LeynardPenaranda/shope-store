@@ -1,6 +1,11 @@
+import ProductCarousel from "@/components/shared/product/product-carouse";
 import ProductList from "@/components/shared/product/productList";
+import ViewAllProductsButton from "@/components/view-all-products";
 
-import { getLatestProduct } from "@/lib/actions/product.action";
+import {
+  getFeaturedProducts,
+  getLatestProduct,
+} from "@/lib/actions/product.action";
 import { APP_NAME } from "@/lib/constants";
 
 export const metadata = {
@@ -9,10 +14,17 @@ export const metadata = {
 
 const HomePage = async () => {
   const latestProduct = await getLatestProduct();
+  const featuredProducts = await getFeaturedProducts();
 
   return (
     <>
+      {featuredProducts.length > 0 && (
+        <div className="w-full flex items-center justify-center">
+          <ProductCarousel data={featuredProducts} />
+        </div>
+      )}
       <ProductList data={latestProduct} title="Newest Arrival" />
+      <ViewAllProductsButton />
     </>
   );
 };

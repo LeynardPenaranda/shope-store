@@ -158,7 +158,7 @@ const OrderDetailsTable = ({
               <h2 className="text-xl pb-4">Payment Method</h2>
               <p className="mb-2">{paymentMethod}</p>
               {isPaid ? (
-                <Badge variant="secondary">
+                <Badge variant="successOutline">
                   Paid at {formatDateandTime(paidAt!).dateTime}
                 </Badge>
               ) : (
@@ -175,7 +175,7 @@ const OrderDetailsTable = ({
                 {shippingAddress.postalCode} , {shippingAddress.country}
               </p>
               {isDelivered ? (
-                <Badge variant="secondary">
+                <Badge variant="successOutline">
                   Delivered at {formatDateandTime(deliveredAt!).dateTime}
                 </Badge>
               ) : (

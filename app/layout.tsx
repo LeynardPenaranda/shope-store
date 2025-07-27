@@ -36,7 +36,9 @@ export default function RootLayout({
           <Toaster />
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-1 mx-auto max-w-7xl ">{children}</main>
+            <main className="flex-1 mx-auto max-w-7xl w-full pb-40">
+              {children}
+            </main>
             <Footer />
           </div>
         </ThemeProvider>

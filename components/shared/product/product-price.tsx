@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
 
 const ProductPrice = ({
   value,
@@ -13,8 +13,8 @@ const ProductPrice = ({
   return (
     <p className={cn(`text-2xl`, className)}>
       <span className="text-xs align-super">₱</span>
-      {intValue}
-      <span className="text-xs align-super">{floatValue}</span>
+      {formatNumber(Number(intValue))}
+      <span className="text-xs align-super">.{floatValue}</span>
     </p>
   );
 };
