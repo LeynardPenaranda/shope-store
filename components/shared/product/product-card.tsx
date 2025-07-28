@@ -24,7 +24,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <Link href={`/product/${product.slug}`}>
           <h2 className="text-sm font-medium">{product.name}</h2>
         </Link>
-        <div className="flex-between gap-4">
+        <div className="flex-between gap-2  flex-col md:flex-row overflow-auto">
           <RatingStars value={Number(product.rating)} />
           <p className="text-[.8rem]">{product.numReviews} Reviews</p>
           {product.stock > 0 ? (
