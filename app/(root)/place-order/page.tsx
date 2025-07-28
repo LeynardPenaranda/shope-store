@@ -37,29 +37,31 @@ const PlaceOrderPage = async () => {
         <div className="md:col-span-2 overflow-x-auto space-y-4">
           <CardList userAddress={userAddress} user={user} cart={cart} />
         </div>
-        <Card>
-          <CardContent className="p-4 gap-4 space-y-4">
-            <div className="flex justify-between">
-              <div>Items total Price:</div>
-              <div>{formatToPHP(Number(cart.itemsPrice))}</div>
-            </div>
-            <div className="flex justify-between">
-              <div>Tax total Price:</div>
-              <div>{formatToPHP(Number(cart.taxPrice))}</div>
-            </div>
-            <div className="flex justify-between">
-              <div>Shipping total Price:</div>
-              <div>{formatToPHP(Number(cart.shippingPrice))}</div>
-            </div>
-            <div className="flex justify-between">
-              <div className="font-bold">Total:</div>
-              <div className="font-bold">
-                {formatToPHP(Number(cart.totalPrice))}
+        <div>
+          <Card>
+            <CardContent className="p-4 gap-4 space-y-4">
+              <div className="flex justify-between">
+                <div>Items total Price:</div>
+                <div>{formatToPHP(Number(cart.itemsPrice))}</div>
               </div>
-            </div>
-            <PlaceOrderForm />
-          </CardContent>
-        </Card>
+              <div className="flex justify-between">
+                <div>Tax total Price:</div>
+                <div>{formatToPHP(Number(cart.taxPrice))}</div>
+              </div>
+              <div className="flex justify-between">
+                <div>Shipping total Price:</div>
+                <div>{formatToPHP(Number(cart.shippingPrice))}</div>
+              </div>
+              <div className="flex justify-between">
+                <div className="font-bold">Total:</div>
+                <div className="font-bold">
+                  {formatToPHP(Number(cart.totalPrice))}
+                </div>
+              </div>
+              <PlaceOrderForm />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );
