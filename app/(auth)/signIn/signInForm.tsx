@@ -20,6 +20,7 @@ const SignInForm = () => {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const [isEyeOpen, setIsEyeOpen] = useState(false);
+
   const [data, action] = useActionState(signInWithCredentials, {
     success: false,
     message: "",
@@ -107,7 +108,7 @@ const SignInForm = () => {
         </p>
         <div className="border-b border-gray-400 w-full"></div>
       </div>
-      <GoogleSignIn />
+      <GoogleSignIn callbackUrl={callbackUrl} />
     </>
   );
 };

@@ -8,7 +8,7 @@ const ProductImages = ({ images }: { images: string[] }) => {
 
   return (
     <div className="space-y-4">
-      <div className="border border-gray-300 flex items-center justify-center mt-10">
+      <div className=" flex items-center justify-center mt-10">
         <Image
           src={images[current]}
           alt="product images"
