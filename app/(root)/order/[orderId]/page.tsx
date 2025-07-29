@@ -16,7 +16,7 @@ const OrderDetailsPage = async (props: {
   const order = await getOrderById(orderId);
   if (!order) notFound();
 
-  const normalizedOrder: Order = {
+  const normalizedOrder: Omit<Order, "paymentResult"> = {
     ...order,
     shippingAddress: order.shippingAddress as ShippingAddress,
     orderItems: order.OrderItem, // 🔁 Fix naming mismatch

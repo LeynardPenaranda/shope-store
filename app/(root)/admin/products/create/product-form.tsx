@@ -9,11 +9,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PRODUCT_DEFAULT_VALUES } from "@/lib/constants";
-import { useToast } from "@/lib/hooks/useToast";
+
 import { insertProductSchema, updateProductsSchema } from "@/lib/validator";
 import { Product } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import z from "zod";
 import slugify from "slugify";
@@ -31,9 +31,6 @@ const ProductForm = ({
   product?: Product;
   productId?: string;
 }) => {
-  const router = useRouter();
-  const { success, warning } = useToast();
-
   const schema = type === "Update" ? updateProductsSchema : insertProductSchema;
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
